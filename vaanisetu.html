@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VaaniSetu – AI For All</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --purple: #6C5CE7;
+    --purple-light: #a29bfe;
+    --purple-dark: #4a3ab0;
+    --teal: #00b894;
+    --teal-light: #55efc4;
+    --coral: #e17055;
+    --amber: #fdcb6e;
+    --red: #d63031;
+    --green: #00b894;
+    --blue: #0984e3;
+    --bg: #f0eff5;
+    --surface: #ffffff;
+    --surface2: #f7f6fc;
+    --sidebar-bg: #1a1535;
+    --sidebar-text: #c8c1f0;
+    --sidebar-active: #6C5CE7;
+    --text: #1a1535;
+    --text2: #6b6b8a;
+    --text3: #9898b0;
+    --border: rgba(108,92,231,0.15);
+    --shadow: 0 2px 16px rgba(108,92,231,0.10);
+    --radius: 14px;
+    --radius-sm: 8px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+  }
+
+  /* LANDING */
+  #landing {
+    width: 100%; min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, #1a1535 0%, #2d2264 50%, #1a1535 100%);
+    position: relative; overflow: hidden;
+  }
+  #landing::before {
+    content:''; position:absolute; inset:0;
+    background: radial-gradient(ellipse 60% 50% at 70% 30%, rgba(108,92,231,0.25) 0%, transparent 70%),
+                radial-gradient(ellipse 40% 40% at 20% 80%, rgba(0,184,148,0.15) 0%, transparent 70%);
+  }
+  .landing-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(108,92,231,0.25); border: 1px solid rgba(108,92,231,0.5);
+    color: var(--purple-light); padding: 6px 16px; border-radius: 99px; font-size: 13px; font-weight: 500;
+    margin-bottom: 32px; position: relative;
+  }
+  .landing-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--teal); animation: blink 2s infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  .landing-title {
+    font-size: clamp(42px, 6vw, 80px); font-weight: 700; color: #fff;
+    text-align: center; line-height: 1.1; position: relative; margin-bottom: 16px;
+  }
+  .landing-title span { color: var(--purple-light); }
+  .landing-sub {
+    font-size: 18px; color: rgba(255,255,255,0.6); text-align: center;
+    max-width: 520px; line-height: 1.7; position: relative; margin-bottom: 48px;
+  }
+  .landing-stats {
+    display: flex; gap: 40px; margin-bottom: 48px; position: relative;
+  }
+  .stat-item { text-align: center; }
+  .stat-num { font-size: 28px; font-weight: 700; color: #fff; }
+  .stat-num span { color: var(--purple-light); }
+  .stat-label { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 2px; }
+  .landing-btn {
+    display: flex; align-items: center; gap: 12px; padding: 16px 36px;
+    background: var(--purple); color: #fff; border: none; border-radius: 99px;
+    font-size: 17px; font-weight: 600; cursor: pointer; position: relative;
+    transition: all 0.2s; box-shadow: 0 8px 32px rgba(108,92,231,0.4);
+    font-family: 'Outfit', sans-serif;
+  }
+  .landing-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(108,92,231,0.5); }
+  .landing-features {
+    display: flex; gap: 24px; margin-top: 48px; position: relative;
+  }
+  .feat-pill {
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.7); padding: 8px 16px; border-radius: 99px; font-size: 13px;
+  }
+  .feat-pill-icon { font-size: 16px; }
+
+  /* APP SHELL */
+  #app { display: none; width: 100%; min-height: 100vh; }
+  .app-layout { display: flex; min-height: 100vh; }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 230px; background: var(--sidebar-bg); padding: 24px 0;
+    display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0;
+    z-index: 100;
+  }
+  .sidebar-logo {
+    display: flex; align-items: center; gap: 12px;
+    padding: 0 20px 24px; border-bottom: 1px solid rgba(255,255,255,0.08);
+    margin-bottom: 16px;
+  }
+  .logo-icon {
+    width: 38px; height: 38px; background: var(--purple); border-radius: 10px;
+    display: flex; align-items: center; justify-content: center; font-size: 20px;
+  }
+  .logo-name { font-size: 18px; font-weight: 700; color: #fff; }
+  .logo-tagline { font-size: 11px; color: var(--sidebar-text); }
+  .nav-section { padding: 8px 12px 4px; font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.3); letter-spacing: 0.08em; text-transform: uppercase; }
+  .nav-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 20px; color: var(--sidebar-text); cursor: pointer;
+    border-radius: 0; transition: all 0.15s; font-size: 14px; font-weight: 500;
+    margin: 1px 0; border-left: 3px solid transparent;
+  }
+  .nav-item:hover { background: rgba(255,255,255,0.05); color: #fff; }
+  .nav-item.active { background: rgba(108,92,231,0.2); color: #fff; border-left-color: var(--purple); }
+  .nav-item .nav-icon { font-size: 18px; width: 22px; text-align: center; }
+  .sidebar-bottom { margin-top: auto; padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.08); }
+  .offline-badge {
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(0,184,148,0.15); border: 1px solid rgba(0,184,148,0.3);
+    color: var(--teal); padding: 8px 12px; border-radius: var(--radius-sm); font-size: 12px;
+  }
+  .offline-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); }
+
+  /* MAIN CONTENT */
+  .main-content { margin-left: 230px; flex: 1; padding: 32px; min-height: 100vh; }
+  .page { display: none; }
+  .page.active { display: block; }
+  .page-header { margin-bottom: 28px; }
+  .page-title { font-size: 26px; font-weight: 700; color: var(--text); }
+  .page-sub { font-size: 14px; color: var(--text2); margin-top: 4px; }
+
+  /* HOME */
+  .home-greeting { font-size: 22px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .home-date { font-size: 13px; color: var(--text2); margin-bottom: 28px; }
+  .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 28px; }
+  .stat-card {
+    border-radius: var(--radius); padding: 20px; color: #fff;
+    position: relative; overflow: hidden;
+  }
+  .stat-card.purple { background: linear-gradient(135deg, #6C5CE7, #a29bfe); }
+  .stat-card.teal { background: linear-gradient(135deg, #00b894, #00cec9); }
+  .stat-card.coral { background: linear-gradient(135deg, #e17055, #fdcb6e); }
+  .stat-card .sc-num { font-size: 32px; font-weight: 700; }
+  .stat-card .sc-label { font-size: 13px; opacity: 0.85; margin-top: 2px; }
+  .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .feature-card {
+    background: var(--surface); border-radius: var(--radius); padding: 20px;
+    border: 1px solid var(--border); cursor: pointer; transition: all 0.2s;
+  }
+  .feature-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); border-color: var(--purple); }
+  .fc-icon {
+    width: 46px; height: 46px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; margin-bottom: 12px;
+  }
+  .fc-icon.purple { background: rgba(108,92,231,0.12); color: var(--purple); }
+  .fc-icon.teal { background: rgba(0,184,148,0.12); color: var(--teal); }
+  .fc-icon.amber { background: rgba(253,203,110,0.2); color: #d4a017; }
+  .fc-icon.coral { background: rgba(225,112,85,0.12); color: var(--coral); }
+  .fc-icon.blue { background: rgba(9,132,227,0.12); color: var(--blue); }
+  .fc-icon.red { background: rgba(214,48,49,0.12); color: var(--red); }
+  .fc-title { font-size: 15px; font-weight: 600; color: var(--text); }
+  .fc-desc { font-size: 12px; color: var(--text2); margin-top: 4px; }
+
+  /* QUICK PHRASES */
+  .phrases-top { display: flex; gap: 12px; align-items: center; margin-bottom: 20px; }
+  .search-bar {
+    flex: 1; display: flex; align-items: center; gap: 10px;
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 10px 16px;
+  }
+  .search-bar input {
+    border: none; background: none; font-family: 'Outfit', sans-serif;
+    font-size: 14px; color: var(--text); outline: none; flex: 1;
+  }
+  .search-bar input::placeholder { color: var(--text3); }
+  .add-btn {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--purple); color: #fff; border: none;
+    padding: 10px 20px; border-radius: var(--radius-sm); font-size: 14px;
+    font-weight: 600; cursor: pointer; font-family: 'Outfit', sans-serif;
+  }
+  .filter-tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+  .filter-tab {
+    padding: 6px 16px; border-radius: 99px; font-size: 13px; font-weight: 500;
+    cursor: pointer; border: 1px solid var(--border); color: var(--text2);
+    background: var(--surface); transition: all 0.15s;
+  }
+  .filter-tab.active, .filter-tab:hover { background: var(--purple); color: #fff; border-color: var(--purple); }
+  .phrases-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .phrase-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 16px; cursor: pointer; transition: all 0.2s; position: relative;
+  }
+  .phrase-card:hover { border-color: var(--purple); box-shadow: 0 0 0 3px rgba(108,92,231,0.1); }
+  .phrase-card:active { transform: scale(0.97); }
+  .phrase-cat { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
+  .phrase-cat.greet { color: var(--teal); }
+  .phrase-cat.need { color: var(--blue); }
+  .phrase-cat.feel { color: var(--coral); }
+  .phrase-cat.req { color: var(--purple); }
+  .phrase-cat.res { color: #d4a017; }
+  .phrase-text { font-size: 15px; font-weight: 500; color: var(--text); }
+  .phrase-actions { display: flex; gap: 6px; margin-top: 10px; }
+  .phrase-star, .phrase-del {
+    width: 28px; height: 28px; border-radius: 6px; border: 1px solid var(--border);
+    background: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    font-size: 14px; transition: all 0.15s; color: var(--text2);
+  }
+  .phrase-star.starred { color: #f39c12; border-color: #f39c12; background: rgba(243,156,18,0.08); }
+  .phrase-del:hover { color: var(--red); border-color: var(--red); background: rgba(214,48,49,0.08); }
+  .speak-toast {
+    position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(100px);
+    background: var(--sidebar-bg); color: #fff; padding: 14px 28px; border-radius: 99px;
+    font-size: 15px; font-weight: 500; z-index: 9999; transition: transform 0.3s ease;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3); display: flex; align-items: center; gap: 10px;
+  }
+  .speak-toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* LIVE SPEECH */
+  .live-container { max-width: 700px; }
+  .live-textarea-wrap {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 20px; margin-bottom: 16px;
+  }
+  .live-textarea {
+    width: 100%; min-height: 140px; border: none; font-family: 'Outfit', sans-serif;
+    font-size: 17px; color: var(--text); outline: none; resize: none; background: none;
+    line-height: 1.6;
+  }
+  .live-textarea::placeholder { color: var(--text3); }
+  .live-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    border-top: 1px solid var(--border); padding-top: 12px; margin-top: 4px;
+  }
+  .live-tools { display: flex; gap: 8px; }
+  .live-tool {
+    width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--border);
+    background: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    color: var(--text2); font-size: 15px; transition: all 0.15s;
+  }
+  .live-tool:hover { color: var(--purple); border-color: var(--purple); }
+  .char-count { font-size: 12px; color: var(--text3); }
+  .speak-btn {
+    width: 100%; padding: 16px; background: var(--purple); color: #fff;
+    border: none; border-radius: var(--radius); font-family: 'Outfit', sans-serif;
+    font-size: 16px; font-weight: 600; cursor: pointer; display: flex;
+    align-items: center; justify-content: center; gap: 10px; transition: all 0.2s;
+    margin-bottom: 20px;
+  }
+  .speak-btn:hover { background: var(--purple-dark); }
+  .speak-btn.speaking { background: var(--teal); animation: pulse 1s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.7} }
+  .quick-sug-label { font-size: 13px; font-weight: 600; color: var(--text2); margin-bottom: 10px; }
+  .quick-sug-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .quick-sug {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 12px 14px; font-size: 13px; color: var(--text2); cursor: pointer;
+    transition: all 0.15s; font-family: 'Outfit', sans-serif;
+  }
+  .quick-sug:hover { border-color: var(--purple); color: var(--purple); }
+
+  /* EMOTIONS */
+  .emotions-wrap { max-width: 780px; }
+  .custom-msg-wrap { margin-bottom: 24px; }
+  .custom-msg-label { font-size: 13px; font-weight: 600; color: var(--text2); margin-bottom: 8px; }
+  .custom-msg-input {
+    width: 100%; padding: 12px 16px; border: 1px solid var(--border);
+    border-radius: var(--radius-sm); font-family: 'Outfit', sans-serif; font-size: 14px;
+    color: var(--text); background: var(--surface); outline: none;
+  }
+  .custom-msg-input:focus { border-color: var(--purple); }
+  .emotions-label { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 16px; }
+  .emotions-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
+  .emotion-btn {
+    background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius);
+    padding: 18px 12px; display: flex; flex-direction: column; align-items: center; gap: 8px;
+    cursor: pointer; transition: all 0.2s; font-family: 'Outfit', sans-serif;
+  }
+  .emotion-btn:hover { border-color: var(--purple); box-shadow: 0 0 0 3px rgba(108,92,231,0.1); transform: scale(1.03); }
+  .emotion-btn.selected { border-color: var(--purple); background: rgba(108,92,231,0.06); }
+  .emotion-emoji { font-size: 36px; }
+  .emotion-name { font-size: 13px; font-weight: 500; color: var(--text2); }
+  .how-to-use {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 18px 20px;
+  }
+  .how-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 12px; }
+  .how-step { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; font-size: 13px; color: var(--text2); }
+  .how-num {
+    width: 22px; height: 22px; border-radius: 50%; background: var(--purple);
+    color: #fff; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .emotion-speak-btn {
+    width: 100%; padding: 14px; background: var(--purple); color: #fff; border: none;
+    border-radius: var(--radius); font-family: 'Outfit', sans-serif; font-size: 15px;
+    font-weight: 600; cursor: pointer; margin-top: 16px; transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+  }
+  .emotion-speak-btn:hover { background: var(--purple-dark); }
+  .emotion-speak-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* VOICE CLONE */
+  .voice-wrap { max-width: 680px; }
+  .test-row { display: flex; gap: 12px; margin-bottom: 24px; }
+  .test-input {
+    flex: 1; padding: 12px 16px; border: 1px solid var(--border); border-radius: var(--radius-sm);
+    font-family: 'Outfit', sans-serif; font-size: 14px; color: var(--text); background: var(--surface); outline: none;
+  }
+  .test-input:focus { border-color: var(--purple); }
+  .test-btn {
+    display: flex; align-items: center; gap: 8px;
+    padding: 12px 22px; background: var(--purple); color: #fff; border: none;
+    border-radius: var(--radius-sm); font-family: 'Outfit', sans-serif; font-size: 14px;
+    font-weight: 600; cursor: pointer;
+  }
+  .voice-settings-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 24px; margin-bottom: 24px;
+  }
+  .vs-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 20px; }
+  .vs-row { margin-bottom: 18px; }
+  .vs-label { font-size: 13px; font-weight: 500; color: var(--text2); margin-bottom: 8px; display: flex; justify-content: space-between; }
+  .vs-label span { color: var(--purple); font-weight: 600; }
+  .vs-select {
+    width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: var(--radius-sm);
+    font-family: 'Outfit', sans-serif; font-size: 14px; color: var(--text); background: var(--surface); outline: none;
+  }
+  .vs-slider { width: 100%; accent-color: var(--purple); height: 4px; }
+  .vs-range-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--text3); margin-top: 4px; }
+  .profile-name-row { display: flex; gap: 10px; margin-top: 20px; }
+  .profile-name-input {
+    flex: 1; padding: 10px 14px; border: 1px solid var(--border); border-radius: var(--radius-sm);
+    font-family: 'Outfit', sans-serif; font-size: 14px; color: var(--text); background: var(--surface); outline: none;
+  }
+  .save-btn {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 20px; background: var(--teal); color: #fff; border: none;
+    border-radius: var(--radius-sm); font-family: 'Outfit', sans-serif; font-size: 14px;
+    font-weight: 600; cursor: pointer;
+  }
+  .saved-profiles-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 12px; }
+  .no-profiles {
+    background: var(--surface); border: 1.5px dashed var(--border); border-radius: var(--radius);
+    padding: 32px; text-align: center; color: var(--text3); font-size: 14px;
+  }
+  .profile-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 14px 18px; display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .profile-card .pc-name { font-size: 14px; font-weight: 600; color: var(--text); }
+  .profile-card .pc-info { font-size: 12px; color: var(--text3); }
+  .profile-card .pc-actions { display: flex; gap: 8px; }
+  .pc-use {
+    padding: 6px 16px; background: var(--purple); color: #fff; border: none;
+    border-radius: var(--radius-sm); font-size: 12px; font-weight: 600; cursor: pointer;
+    font-family: 'Outfit', sans-serif;
+  }
+  .pc-del {
+    width: 30px; height: 30px; border-radius: var(--radius-sm); border: 1px solid var(--border);
+    background: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    color: var(--text2); transition: all 0.15s;
+  }
+  .pc-del:hover { color: var(--red); border-color: var(--red); }
+
+  /* EMERGENCY */
+  .emergency-wrap { max-width: 680px; }
+  .sos-card {
+    background: linear-gradient(135deg, #c0392b, #e74c3c); color: #fff;
+    border-radius: var(--radius); padding: 32px; text-align: center; margin-bottom: 24px;
+    position: relative; overflow: hidden;
+  }
+  .sos-card::before {
+    content:''; position:absolute; inset:0;
+    background: radial-gradient(ellipse 60% 60% at 50% 50%, rgba(255,255,255,0.1) 0%, transparent 70%);
+  }
+  .sos-icon { font-size: 48px; margin-bottom: 12px; position: relative; }
+  .sos-title { font-size: 22px; font-weight: 700; margin-bottom: 6px; position: relative; }
+  .sos-sub { font-size: 14px; opacity: 0.85; margin-bottom: 24px; position: relative; }
+  .sos-activate {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: #fff; color: var(--red); padding: 14px 32px; border: none;
+    border-radius: var(--radius-sm); font-family: 'Outfit', sans-serif; font-size: 15px;
+    font-weight: 700; cursor: pointer; position: relative; letter-spacing: 0.05em;
+    transition: all 0.2s;
+  }
+  .sos-activate:hover { transform: scale(1.03); box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
+  .contacts-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .contacts-title { font-size: 16px; font-weight: 600; color: var(--text); }
+  .add-contact-btn {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--purple); color: #fff; border: none; padding: 8px 18px;
+    border-radius: var(--radius-sm); font-family: 'Outfit', sans-serif; font-size: 13px;
+    font-weight: 600; cursor: pointer;
+  }
+  .contact-card {
+    background: var(--surface); border: 2px solid var(--purple); border-radius: var(--radius);
+    padding: 16px 20px; margin-bottom: 12px;
+  }
+  .contact-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .contact-name { font-size: 15px; font-weight: 600; color: var(--text); }
+  .primary-badge {
+    font-size: 11px; font-weight: 600; padding: 3px 10px;
+    background: rgba(108,92,231,0.12); color: var(--purple); border-radius: 99px;
+  }
+  .contact-phone { font-size: 13px; color: var(--text2); margin-bottom: 4px; }
+  .contact-type { font-size: 12px; color: var(--text3); margin-bottom: 12px; }
+  .call-now-btn {
+    width: 100%; padding: 12px; background: var(--green); color: #fff; border: none;
+    border-radius: var(--radius-sm); font-family: 'Outfit', sans-serif; font-size: 14px;
+    font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .tips-box {
+    background: rgba(253,203,110,0.15); border: 1px solid rgba(253,203,110,0.4);
+    border-radius: var(--radius); padding: 14px 16px; margin-top: 16px;
+  }
+  .tips-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+  .tip-item { font-size: 12px; color: var(--text2); margin-bottom: 5px; display: flex; gap: 6px; }
+
+  /* GESTURE CARDS */
+  .gesture-wrap { }
+  .gesture-intro {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 16px 20px; margin-bottom: 24px; display: flex; align-items: center; gap: 14px;
+  }
+  .gesture-intro-icon {
+    width: 48px; height: 48px; background: rgba(108,92,231,0.1); border-radius: 12px;
+    display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;
+  }
+  .gesture-intro-text { font-size: 13px; color: var(--text2); line-height: 1.6; }
+  .gesture-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .gesture-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 20px 14px; display: flex; flex-direction: column; align-items: center; gap: 10px;
+    cursor: pointer; transition: all 0.2s; text-align: center;
+  }
+  .gesture-card:hover { border-color: var(--purple); box-shadow: 0 0 0 3px rgba(108,92,231,0.1); transform: scale(1.02); }
+  .gesture-card:active { transform: scale(0.97); }
+  .gesture-emoji { font-size: 40px; }
+  .gesture-label { font-size: 13px; font-weight: 600; color: var(--text); }
+  .gesture-phrase { font-size: 11px; color: var(--text2); }
+  .camera-scan {
+    background: var(--surface); border: 2px dashed var(--border); border-radius: var(--radius);
+    padding: 32px; text-align: center; margin-top: 24px; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .camera-scan:hover { border-color: var(--purple); background: rgba(108,92,231,0.03); }
+  .camera-scan-icon { font-size: 36px; color: var(--text3); margin-bottom: 10px; }
+  .camera-scan-text { font-size: 14px; font-weight: 600; color: var(--text2); }
+  .camera-scan-sub { font-size: 12px; color: var(--text3); margin-top: 4px; }
+
+  /* MODAL */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000;
+    display: none; align-items: center; justify-content: center;
+  }
+  .modal-overlay.show { display: flex; }
+  .modal {
+    background: var(--surface); border-radius: var(--radius); padding: 28px;
+    width: 420px; max-width: 90vw; position: relative;
+  }
+  .modal-title { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .modal-sub { font-size: 13px; color: var(--text2); margin-bottom: 20px; }
+  .modal-input {
+    width: 100%; padding: 12px 14px; border: 1px solid var(--border); border-radius: var(--radius-sm);
+    font-family: 'Outfit', sans-serif; font-size: 14px; color: var(--text); background: var(--bg); outline: none;
+    margin-bottom: 12px;
+  }
+  .modal-input:focus { border-color: var(--purple); background: var(--surface); }
+  .modal-select {
+    width: 100%; padding: 12px 14px; border: 1px solid var(--border); border-radius: var(--radius-sm);
+    font-family: 'Outfit', sans-serif; font-size: 14px; color: var(--text); background: var(--bg); outline: none;
+    margin-bottom: 20px;
+  }
+  .modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+  .modal-cancel {
+    padding: 10px 20px; border: 1px solid var(--border); border-radius: var(--radius-sm);
+    background: none; color: var(--text2); font-family: 'Outfit', sans-serif; font-size: 14px; cursor: pointer;
+  }
+  .modal-confirm {
+    padding: 10px 22px; background: var(--purple); color: #fff; border: none;
+    border-radius: var(--radius-sm); font-family: 'Outfit', sans-serif; font-size: 14px;
+    font-weight: 600; cursor: pointer;
+  }
+  .modal-close-btn {
+    position: absolute; top: 16px; right: 16px; background: none; border: none;
+    cursor: pointer; color: var(--text2); font-size: 18px;
+  }
+
+  /* SOS MODAL */
+  .sos-modal {
+    background: var(--surface); border-radius: var(--radius); padding: 32px;
+    width: 380px; text-align: center;
+  }
+  .sos-modal-icon { font-size: 56px; margin-bottom: 16px; }
+  .sos-modal-title { font-size: 20px; font-weight: 700; color: var(--red); margin-bottom: 8px; }
+  .sos-modal-sub { font-size: 14px; color: var(--text2); margin-bottom: 24px; }
+  .sos-countdown { font-size: 48px; font-weight: 700; color: var(--red); margin-bottom: 20px; }
+  .sos-cancel {
+    padding: 12px 28px; border: 2px solid var(--red); border-radius: var(--radius-sm);
+    background: none; color: var(--red); font-family: 'Outfit', sans-serif; font-size: 15px;
+    font-weight: 600; cursor: pointer;
+  }
+
+  /* RESPONSIVE */
+  @media(max-width: 900px) {
+    .sidebar { width: 200px; }
+    .main-content { margin-left: 200px; padding: 20px; }
+    .features-grid { grid-template-columns: repeat(2, 1fr); }
+    .emotions-grid { grid-template-columns: repeat(3, 1fr); }
+    .gesture-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- LANDING PAGE -->
+<div id="landing">
+  <div class="landing-badge">
+    <span class="landing-dot"></span>
+    "AI For All" — AesterAI Team
+  </div>
+  <div class="landing-title">वाणी <span>सेतु</span><br>VaaniSetu</div>
+  <div class="landing-sub">Zero-cost, offline-first AI communication for 2.7 crore Indians with acquired speech disabilities</div>
+  <div class="landing-stats">
+    <div class="stat-item">
+      <div class="stat-num">2.7<span>Cr</span></div>
+      <div class="stat-label">Indians affected</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">₹<span>0</span></div>
+      <div class="stat-label">Cost to user</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">100<span>%</span></div>
+      <div class="stat-label">Offline ready</div>
+    </div>
+  </div>
+  <button class="landing-btn" onclick="launchApp()">
+    <span>🎙️</span> Launch VaaniSetu
+  </button>
+  <div class="landing-features">
+    <div class="feat-pill"><span class="feat-pill-icon">🧬</span> AI Voice Cloning</div>
+    <div class="feat-pill"><span class="feat-pill-icon">🤟</span> Gesture Cards</div>
+    <div class="feat-pill"><span class="feat-pill-icon">💙</span> Emotion Speech</div>
+    <div class="feat-pill"><span class="feat-pill-icon">🔒</span> Privacy First</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <div class="app-layout">
+    <!-- SIDEBAR -->
+    <nav class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-icon">🎙️</div>
+        <div>
+          <div class="logo-name">VaaniSetu</div>
+          <div class="logo-tagline">AI For All</div>
+        </div>
+      </div>
+      <div class="nav-section">Main</div>
+      <div class="nav-item active" onclick="showPage('home', this)"><span class="nav-icon">🏠</span> Home</div>
+      <div class="nav-item" onclick="showPage('phrases', this)"><span class="nav-icon">💬</span> Quick Phrases</div>
+      <div class="nav-item" onclick="showPage('live', this)"><span class="nav-icon">🔊</span> Live Speech</div>
+      <div class="nav-section">Features</div>
+      <div class="nav-item" onclick="showPage('emotions', this)"><span class="nav-icon">😊</span> Emotions</div>
+      <div class="nav-item" onclick="showPage('voice', this)"><span class="nav-icon">🎤</span> Voice Clone</div>
+      <div class="nav-item" onclick="showPage('gesture', this)"><span class="nav-icon">🤟</span> Gesture Cards</div>
+      <div class="nav-section">Safety</div>
+      <div class="nav-item" onclick="showPage('emergency', this)"><span class="nav-icon">🆘</span> Emergency SOS</div>
+      <div class="sidebar-bottom">
+        <div class="offline-badge">
+          <span class="offline-dot"></span>
+          100% Offline Ready
+        </div>
+      </div>
+    </nav>
+
+    <!-- MAIN -->
+    <main class="main-content">
+
+      <!-- HOME PAGE -->
+      <div id="page-home" class="page active">
+        <div class="home-greeting">Welcome Back 👋</div>
+        <div class="home-date" id="home-date"></div>
+        <div class="stats-row">
+          <div class="stat-card purple">
+            <div class="sc-num" id="phrases-count">12</div>
+            <div class="sc-label">Phrases Saved</div>
+          </div>
+          <div class="stat-card teal">
+            <div class="sc-num">100%</div>
+            <div class="sc-label">Offline Ready</div>
+          </div>
+          <div class="stat-card coral">
+            <div class="sc-num" id="contacts-count">1</div>
+            <div class="sc-label">Emergency Contacts</div>
+          </div>
+        </div>
+        <div class="features-grid">
+          <div class="feature-card" onclick="showPage('phrases', document.querySelector('[onclick*=phrases]'))">
+            <div class="fc-icon purple">💬</div>
+            <div class="fc-title">Quick Phrases</div>
+            <div class="fc-desc">Tap any phrase to speak it aloud instantly</div>
+          </div>
+          <div class="feature-card" onclick="showPage('live', document.querySelector('[onclick*=live]'))">
+            <div class="fc-icon teal">🔊</div>
+            <div class="fc-title">Live Speech</div>
+            <div class="fc-desc">Type and convert to natural voice speech</div>
+          </div>
+          <div class="feature-card" onclick="showPage('emotions', document.querySelector('[onclick*=emotions]'))">
+            <div class="fc-icon amber">😊</div>
+            <div class="fc-title">Emotions</div>
+            <div class="fc-desc">Express feelings with emotional tone control</div>
+          </div>
+          <div class="feature-card" onclick="showPage('voice', document.querySelector('[onclick*=voice]'))">
+            <div class="fc-icon coral">🎤</div>
+            <div class="fc-title">Voice Clone</div>
+            <div class="fc-desc">Preserve your personal voice & accent</div>
+          </div>
+          <div class="feature-card" onclick="showPage('gesture', document.querySelector('[onclick*=gesture]'))">
+            <div class="fc-icon blue">🤟</div>
+            <div class="fc-title">Gesture Cards</div>
+            <div class="fc-desc">Point at cards to speak without typing</div>
+          </div>
+          <div class="feature-card" onclick="showPage('emergency', document.querySelector('[onclick*=emergency]'))">
+            <div class="fc-icon red">🆘</div>
+            <div class="fc-title">Emergency SOS</div>
+            <div class="fc-desc">Instant alert to your emergency contacts</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- QUICK PHRASES PAGE -->
+      <div id="page-phrases" class="page">
+        <div class="page-header">
+          <div class="page-title">Quick Phrases</div>
+          <div class="page-sub">Tap any phrase to speak it aloud</div>
+        </div>
+        <div class="phrases-top">
+          <div class="search-bar">
+            <span>🔍</span>
+            <input type="text" id="phrase-search" placeholder="Search phrases..." oninput="filterPhrases()">
+          </div>
+          <button class="add-btn" onclick="document.getElementById('add-modal').classList.add('show')">+ Add Phrase</button>
+        </div>
+        <div class="filter-tabs">
+          <div class="filter-tab active" onclick="setFilter('all', this)">All</div>
+          <div class="filter-tab" onclick="setFilter('Greetings', this)">Greetings</div>
+          <div class="filter-tab" onclick="setFilter('Basic Needs', this)">Basic Needs</div>
+          <div class="filter-tab" onclick="setFilter('Feelings', this)">Feelings</div>
+          <div class="filter-tab" onclick="setFilter('Requests', this)">Requests</div>
+          <div class="filter-tab" onclick="setFilter('Responses', this)">Responses</div>
+        </div>
+        <div class="phrases-grid" id="phrases-grid"></div>
+      </div>
+
+      <!-- LIVE SPEECH PAGE -->
+      <div id="page-live" class="page">
+        <div class="page-header">
+          <div class="page-title">Live Transcription</div>
+          <div class="page-sub">Type your message and let it speak for you</div>
+        </div>
+        <div class="live-container">
+          <div class="live-textarea-wrap">
+            <textarea class="live-textarea" id="live-text" placeholder="Type your message here..." oninput="updateCharCount()"></textarea>
+            <div class="live-bar">
+              <div class="live-tools">
+                <button class="live-tool" title="Copy" onclick="copyLiveText()">📋</button>
+                <button class="live-tool" title="Clear" onclick="clearLiveText()">🗑️</button>
+                <button class="live-tool" title="History">📜</button>
+              </div>
+              <div class="char-count" id="char-count">0 characters</div>
+            </div>
+          </div>
+          <button class="speak-btn" id="speak-btn" onclick="speakLive()">🔊 Speak</button>
+          <div class="quick-sug-label">Quick Suggestions</div>
+          <div class="quick-sug-grid">
+            <button class="quick-sug" onclick="insertSuggestion(this)">Hello! How can I help you?</button>
+            <button class="quick-sug" onclick="insertSuggestion(this)">Thank you for your patience.</button>
+            <button class="quick-sug" onclick="insertSuggestion(this)">I would like to order...</button>
+            <button class="quick-sug" onclick="insertSuggestion(this)">Could you please repeat that?</button>
+            <button class="quick-sug" onclick="insertSuggestion(this)">I appreciate your help.</button>
+            <button class="quick-sug" onclick="insertSuggestion(this)">Please wait a moment.</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- EMOTIONS PAGE -->
+      <div id="page-emotions" class="page">
+        <div class="page-header">
+          <div class="page-title">Emotion Recognition</div>
+          <div class="page-sub">Express how you're feeling with emotions and voice</div>
+        </div>
+        <div class="emotions-wrap">
+          <div class="custom-msg-wrap">
+            <div class="custom-msg-label">Custom Message (Optional)</div>
+            <input type="text" class="custom-msg-input" id="emotion-msg" placeholder="Add your own message to the emotion...">
+          </div>
+          <div class="emotions-label">Select Your Emotion</div>
+          <div class="emotions-grid" id="emotions-grid"></div>
+          <div class="how-to-use">
+            <div class="how-title">How to Use</div>
+            <div class="how-step"><div class="how-num">1</div> Select an emotion that matches how you're feeling</div>
+            <div class="how-step"><div class="how-num">2</div> Optionally add a custom message to personalize it</div>
+            <div class="how-step"><div class="how-num">3</div> The emotion will be spoken aloud automatically</div>
+          </div>
+          <button class="emotion-speak-btn" id="emotion-speak-btn" onclick="speakEmotion()" disabled>🔊 Speak Emotion</button>
+        </div>
+      </div>
+
+      <!-- VOICE CLONE PAGE -->
+      <div id="page-voice" class="page">
+        <div class="page-header">
+          <div class="page-title">Voice Cloning</div>
+          <div class="page-sub">Create and save personalized voice profiles</div>
+        </div>
+        <div class="voice-wrap">
+          <div class="test-row">
+            <input type="text" class="test-input" id="test-voice-text" value="Hello, this is how my voice sounds." placeholder="Enter test text...">
+            <button class="test-btn" onclick="testVoice()">▶ Test</button>
+          </div>
+          <div class="voice-settings-card">
+            <div class="vs-title">Voice Settings</div>
+            <div class="vs-row">
+              <div class="vs-label">Voice Type</div>
+              <select class="vs-select" id="voice-type" onchange="updateVoicePreview()">
+                <option>Natural Female — Hindi (India)</option>
+                <option>Natural Male — Hindi (India)</option>
+                <option>Natural Female — Tamil (India)</option>
+                <option>Natural Male — English (India)</option>
+                <option>Natural Female — Telugu (India)</option>
+              </select>
+            </div>
+            <div class="vs-row">
+              <div class="vs-label">Speed <span id="speed-val">1.0x</span></div>
+              <input type="range" class="vs-slider" min="0.5" max="2" step="0.1" value="1.0" oninput="document.getElementById('speed-val').textContent=parseFloat(this.value).toFixed(1)+'x'">
+              <div class="vs-range-labels"><span>Slower</span><span>Faster</span></div>
+            </div>
+            <div class="vs-row">
+              <div class="vs-label">Pitch <span id="pitch-val">1.0</span></div>
+              <input type="range" class="vs-slider" min="0.5" max="2" step="0.1" value="1.0" oninput="document.getElementById('pitch-val').textContent=parseFloat(this.value).toFixed(1)">
+              <div class="vs-range-labels"><span>Lower</span><span>Higher</span></div>
+            </div>
+            <div class="vs-row">
+              <div class="vs-label">Volume <span id="volume-val">100%</span></div>
+              <input type="range" class="vs-slider" min="0" max="100" step="1" value="100" oninput="document.getElementById('volume-val').textContent=this.value+'%'">
+              <div class="vs-range-labels"><span>Quiet</span><span>Loud</span></div>
+            </div>
+            <div class="profile-name-row">
+              <input type="text" class="profile-name-input" id="profile-name" placeholder="e.g., My Natural Voice">
+              <button class="save-btn" onclick="saveProfile()">💾 Save</button>
+            </div>
+          </div>
+          <div class="saved-profiles-title">Saved Profiles</div>
+          <div id="saved-profiles-list">
+            <div class="no-profiles">No saved profiles yet. Create one above.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- GESTURE CARDS PAGE -->
+      <div id="page-gesture" class="page">
+        <div class="page-header">
+          <div class="page-title">Gesture Cards</div>
+          <div class="page-sub">Point camera at a card or tap to speak</div>
+        </div>
+        <div class="gesture-intro">
+          <div class="gesture-intro-icon">🤟</div>
+          <div class="gesture-intro-text">
+            <strong>How it works:</strong> Print these cards and point your camera at them, or tap any card below to speak the phrase. No reading or typing required — designed for semi-literate and elderly users.
+          </div>
+        </div>
+        <div class="gesture-grid" id="gesture-grid"></div>
+        <div class="camera-scan" onclick="showCameraSimulation()">
+          <div class="camera-scan-icon">📷</div>
+          <div class="camera-scan-text">Open Camera for Card Recognition</div>
+          <div class="camera-scan-sub">MobileNetV3 · Offline · Works in low light</div>
+        </div>
+      </div>
+
+      <!-- EMERGENCY PAGE -->
+      <div id="page-emergency" class="page">
+        <div class="page-header">
+          <div class="page-title">Emergency SOS</div>
+          <div class="page-sub">Quick access to emergency contacts and help</div>
+        </div>
+        <div class="emergency-wrap">
+          <div class="sos-card">
+            <div class="sos-icon">⚠️</div>
+            <div class="sos-title">Emergency Assistance</div>
+            <div class="sos-sub">Press the button below to alert your emergency contacts</div>
+            <button class="sos-activate" onclick="activateSOS()">🚨 ACTIVATE SOS</button>
+          </div>
+          <div class="contacts-header">
+            <div class="contacts-title">Emergency Contacts</div>
+            <button class="add-contact-btn" onclick="document.getElementById('contact-modal').classList.add('show')">+ Add Contact</button>
+          </div>
+          <div id="contacts-list"></div>
+          <div class="tips-box">
+            <div class="tips-title">Safety Tips</div>
+            <div class="tip-item">• Add at least 2–3 trusted emergency contacts</div>
+            <div class="tip-item">• Keep your emergency contacts informed about your communication needs</div>
+            <div class="tip-item">• SOS alert will share your location and play a voice message</div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- SPEAK TOAST -->
+<div class="speak-toast" id="speak-toast">
+  <span>🔊</span> <span id="toast-text">Speaking...</span>
+</div>
+
+<!-- ADD PHRASE MODAL -->
+<div class="modal-overlay" id="add-modal">
+  <div class="modal">
+    <button class="modal-close-btn" onclick="document.getElementById('add-modal').classList.remove('show')">✕</button>
+    <div class="modal-title">Add New Phrase</div>
+    <div class="modal-sub">Create a custom phrase for quick access</div>
+    <input type="text" class="modal-input" id="new-phrase-text" placeholder="Enter your phrase...">
+    <select class="modal-select" id="new-phrase-cat">
+      <option>Greetings</option>
+      <option>Basic Needs</option>
+      <option>Feelings</option>
+      <option>Requests</option>
+      <option>Responses</option>
+    </select>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="document.getElementById('add-modal').classList.remove('show')">Cancel</button>
+      <button class="modal-confirm" onclick="addPhrase()">Add Phrase</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD CONTACT MODAL -->
+<div class="modal-overlay" id="contact-modal">
+  <div class="modal">
+    <button class="modal-close-btn" onclick="document.getElementById('contact-modal').classList.remove('show')">✕</button>
+    <div class="modal-title">Add Emergency Contact</div>
+    <div class="modal-sub">This contact will be alerted in emergencies</div>
+    <input type="text" class="modal-input" id="contact-name-input" placeholder="Contact name...">
+    <input type="text" class="modal-input" id="contact-phone-input" placeholder="Phone number...">
+    <select class="modal-select" id="contact-type-input">
+      <option>Family</option>
+      <option>Friend</option>
+      <option>Caregiver</option>
+      <option>Doctor</option>
+      <option>Emergency Services</option>
+    </select>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="document.getElementById('contact-modal').classList.remove('show')">Cancel</button>
+      <button class="modal-confirm" onclick="addContact()">Add Contact</button>
+    </div>
+  </div>
+</div>
+
+<!-- SOS COUNTDOWN MODAL -->
+<div class="modal-overlay" id="sos-modal">
+  <div class="sos-modal">
+    <div class="sos-modal-icon">🚨</div>
+    <div class="sos-modal-title">SOS Activating!</div>
+    <div class="sos-modal-sub">Alerting all emergency contacts in...</div>
+    <div class="sos-countdown" id="sos-count">5</div>
+    <button class="sos-cancel" onclick="cancelSOS()">Cancel SOS</button>
+  </div>
+</div>
+
+<script>
+// ─── DATA ─────────────────────────────────────────────────────────────────────
+let phrases = [
+  { id:1, text:'Hello, how are you?', cat:'Greetings', starred:true },
+  { id:2, text:'Thank you very much', cat:'Greetings', starred:false },
+  { id:3, text:'I need help', cat:'Basic Needs', starred:true },
+  { id:4, text:"I'm thirsty", cat:'Basic Needs', starred:false },
+  { id:5, text:"I'm tired", cat:'Feelings', starred:false },
+  { id:6, text:"I'm happy", cat:'Feelings', starred:false },
+  { id:7, text:'Please wait a moment', cat:'Requests', starred:false },
+  { id:8, text:'Can you repeat that?', cat:'Requests', starred:false },
+  { id:9, text:"Yes, that's correct", cat:'Responses', starred:false },
+  { id:10, text:'No, I disagree', cat:'Responses', starred:false },
+  { id:11, text:"I don't understand", cat:'Responses', starred:true },
+  { id:12, text:'I need water', cat:'Basic Needs', starred:false },
+];
+let currentFilter = 'all';
+let selectedEmotion = null;
+let contacts = [
+  { id:1, name:'Emergency Services', phone:'112', type:'Emergency', primary:true }
+];
+let profiles = [];
+let sosTimer = null;
+
+const emotions = [
+  {emoji:'😊',name:'Happy', phrase:'I am feeling happy right now!'},
+  {emoji:'😢',name:'Sad', phrase:'I am feeling sad.'},
+  {emoji:'😠',name:'Angry', phrase:'I am feeling angry.'},
+  {emoji:'🤩',name:'Excited', phrase:'I am very excited!'},
+  {emoji:'😴',name:'Tired', phrase:'I am feeling very tired.'},
+  {emoji:'😵',name:'Confused', phrase:'I am confused.'},
+  {emoji:'❤️',name:'Love', phrase:'I love you.'},
+  {emoji:'😰',name:'Anxious', phrase:'I am feeling anxious.'},
+  {emoji:'😌',name:'Calm', phrase:'I am feeling calm.'},
+  {emoji:'😲',name:'Surprised', phrase:'I am surprised!'},
+  {emoji:'🙏',name:'Grateful', phrase:'I am very grateful.'},
+  {emoji:'😐',name:'Neutral', phrase:'I am feeling okay.'},
+];
+
+const gestures = [
+  {emoji:'👍', label:'Yes / Okay', phrase:'Yes, that is correct'},
+  {emoji:'👎', label:'No', phrase:'No, I disagree'},
+  {emoji:'🙏', label:'Please', phrase:'Please help me'},
+  {emoji:'💧', label:'Water', phrase:'I need water'},
+  {emoji:'🍽️', label:'Food', phrase:'I am hungry'},
+  {emoji:'🛏️', label:'Rest', phrase:'I need to rest'},
+  {emoji:'🚽', label:'Bathroom', phrase:'I need the bathroom'},
+  {emoji:'😓', label:'Pain', phrase:'I am in pain'},
+  {emoji:'💊', label:'Medicine', phrase:'I need my medicine'},
+  {emoji:'📞', label:'Call', phrase:'Please call someone for me'},
+  {emoji:'🏠', label:'Home', phrase:'I want to go home'},
+  {emoji:'👨‍⚕️', label:'Doctor', phrase:'I need a doctor'},
+];
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+function init() {
+  document.getElementById('home-date').textContent = new Date().toLocaleDateString('en-IN', {
+    weekday:'long', year:'numeric', month:'long', day:'numeric'
+  });
+  renderPhrases();
+  renderEmotions();
+  renderGestures();
+  renderContacts();
+}
+
+function launchApp() {
+  document.getElementById('landing').style.display = 'none';
+  document.getElementById('app').style.display = 'flex';
+  init();
+}
+
+// ─── NAVIGATION ───────────────────────────────────────────────────────────────
+function showPage(page, navEl) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  if(navEl) navEl.classList.add('active');
+}
+
+// ─── PHRASES ─────────────────────────────────────────────────────────────────
+function renderPhrases() {
+  const search = document.getElementById('phrase-search')?.value.toLowerCase() || '';
+  const grid = document.getElementById('phrases-grid');
+  if(!grid) return;
+  const catColors = { 'Greetings':'greet', 'Basic Needs':'need', 'Feelings':'feel', 'Requests':'req', 'Responses':'res' };
+  let filtered = phrases.filter(p => {
+    const matchFilter = currentFilter === 'all' || p.cat === currentFilter;
+    const matchSearch = p.text.toLowerCase().includes(search);
+    return matchFilter && matchSearch;
+  });
+  grid.innerHTML = filtered.map(p => `
+    <div class="phrase-card" onclick="speakPhrase('${p.text.replace(/'/g,"\\'")}')">
+      <div class="phrase-cat ${catColors[p.cat]||''}">${p.cat}</div>
+      <div class="phrase-text">${p.text}</div>
+      <div class="phrase-actions">
+        <button class="phrase-star ${p.starred?'starred':''}" onclick="event.stopPropagation();toggleStar(${p.id})">${p.starred?'⭐':'☆'}</button>
+        <button class="phrase-del" onclick="event.stopPropagation();deletePhrase(${p.id})">🗑️</button>
+      </div>
+    </div>
+  `).join('');
+  document.getElementById('phrases-count').textContent = phrases.length;
+}
+
+function setFilter(f, el) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  renderPhrases();
+}
+
+function filterPhrases() { renderPhrases(); }
+
+function toggleStar(id) {
+  const p = phrases.find(x=>x.id===id);
+  if(p) p.starred = !p.starred;
+  renderPhrases();
+}
+
+function deletePhrase(id) {
+  phrases = phrases.filter(x=>x.id!==id);
+  renderPhrases();
+}
+
+function addPhrase() {
+  const text = document.getElementById('new-phrase-text').value.trim();
+  const cat = document.getElementById('new-phrase-cat').value;
+  if(!text) return;
+  phrases.push({ id: Date.now(), text, cat, starred: false });
+  document.getElementById('new-phrase-text').value = '';
+  document.getElementById('add-modal').classList.remove('show');
+  renderPhrases();
+}
+
+function speakPhrase(text) {
+  speak(text);
+}
+
+// ─── SPEECH ───────────────────────────────────────────────────────────────────
+function speak(text) {
+  if('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.rate = 0.9; u.pitch = 1.0; u.volume = 1.0;
+    window.speechSynthesis.speak(u);
+  }
+  showToast(text);
+}
+
+function showToast(text) {
+  const toast = document.getElementById('speak-toast');
+  document.getElementById('toast-text').textContent = text.length > 50 ? text.substring(0,50)+'...' : text;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+// ─── LIVE SPEECH ─────────────────────────────────────────────────────────────
+function updateCharCount() {
+  const t = document.getElementById('live-text').value;
+  document.getElementById('char-count').textContent = t.length + ' characters';
+}
+
+function speakLive() {
+  const text = document.getElementById('live-text').value.trim();
+  if(!text) return;
+  const btn = document.getElementById('speak-btn');
+  btn.classList.add('speaking');
+  btn.textContent = '🔊 Speaking...';
+  speak(text);
+  setTimeout(() => { btn.classList.remove('speaking'); btn.textContent = '🔊 Speak'; }, 3000);
+}
+
+function copyLiveText() {
+  const t = document.getElementById('live-text').value;
+  navigator.clipboard.writeText(t).catch(()=>{});
+  showToast('Copied to clipboard!');
+}
+
+function clearLiveText() {
+  document.getElementById('live-text').value = '';
+  updateCharCount();
+}
+
+function insertSuggestion(btn) {
+  document.getElementById('live-text').value = btn.textContent;
+  updateCharCount();
+}
+
+// ─── EMOTIONS ─────────────────────────────────────────────────────────────────
+function renderEmotions() {
+  const grid = document.getElementById('emotions-grid');
+  if(!grid) return;
+  grid.innerHTML = emotions.map((e, i) => `
+    <button class="emotion-btn" onclick="selectEmotion(${i})">
+      <span class="emotion-emoji">${e.emoji}</span>
+      <span class="emotion-name">${e.name}</span>
+    </button>
+  `).join('');
+}
+
+function selectEmotion(i) {
+  selectedEmotion = i;
+  document.querySelectorAll('.emotion-btn').forEach((b,j) => {
+    b.classList.toggle('selected', j===i);
+  });
+  document.getElementById('emotion-speak-btn').disabled = false;
+}
+
+function speakEmotion() {
+  if(selectedEmotion === null) return;
+  const e = emotions[selectedEmotion];
+  const custom = document.getElementById('emotion-msg').value.trim();
+  const text = custom ? `${e.name}. ${custom}` : e.phrase;
+  speak(text);
+}
+
+// ─── GESTURE CARDS ────────────────────────────────────────────────────────────
+function renderGestures() {
+  const grid = document.getElementById('gesture-grid');
+  if(!grid) return;
+  grid.innerHTML = gestures.map(g => `
+    <div class="gesture-card" onclick="speak('${g.phrase.replace(/'/g,"\\'")}')">
+      <span class="gesture-emoji">${g.emoji}</span>
+      <span class="gesture-label">${g.label}</span>
+      <span class="gesture-phrase">"${g.phrase}"</span>
+    </div>
+  `).join('');
+}
+
+function showCameraSimulation() {
+  showToast('📷 Camera scanning... (tap any card to speak)');
+}
+
+// ─── VOICE CLONE ─────────────────────────────────────────────────────────────
+function testVoice() {
+  const text = document.getElementById('test-voice-text').value || 'Hello, this is how my voice sounds.';
+  speak(text);
+}
+
+function saveProfile() {
+  const name = document.getElementById('profile-name').value.trim();
+  if(!name) { showToast('Please enter a profile name'); return; }
+  const type = document.getElementById('voice-type').value;
+  profiles.push({ id: Date.now(), name, type });
+  document.getElementById('profile-name').value = '';
+  renderProfiles();
+  showToast(`Profile "${name}" saved!`);
+}
+
+function renderProfiles() {
+  const list = document.getElementById('saved-profiles-list');
+  if(!list) return;
+  if(profiles.length === 0) {
+    list.innerHTML = '<div class="no-profiles">No saved profiles yet. Create one above.</div>';
+    return;
+  }
+  list.innerHTML = profiles.map(p => `
+    <div class="profile-card">
+      <div>
+        <div class="pc-name">${p.name}</div>
+        <div class="pc-info">${p.type}</div>
+      </div>
+      <div class="pc-actions">
+        <button class="pc-use" onclick="speak('Testing profile: ${p.name.replace(/'/g,"\\'")}')">▶ Use</button>
+        <button class="pc-del" onclick="deleteProfile(${p.id})">🗑️</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function deleteProfile(id) {
+  profiles = profiles.filter(p=>p.id!==id);
+  renderProfiles();
+}
+
+// ─── EMERGENCY ────────────────────────────────────────────────────────────────
+function renderContacts() {
+  const list = document.getElementById('contacts-list');
+  if(!list) return;
+  list.innerHTML = contacts.map(c => `
+    <div class="contact-card">
+      <div class="contact-top">
+        <span class="contact-name">${c.name}</span>
+        ${c.primary ? '<span class="primary-badge">Primary</span>' : ''}
+      </div>
+      <div class="contact-phone">📞 ${c.phone}</div>
+      <div class="contact-type">${c.type}</div>
+      <button class="call-now-btn" onclick="speak('Calling ${c.name.replace(/'/g,"\\'")} now')">📞 Call Now</button>
+    </div>
+  `).join('');
+  document.getElementById('contacts-count').textContent = contacts.length;
+}
+
+function addContact() {
+  const name = document.getElementById('contact-name-input').value.trim();
+  const phone = document.getElementById('contact-phone-input').value.trim();
+  const type = document.getElementById('contact-type-input').value;
+  if(!name || !phone) { showToast('Please fill in all fields'); return; }
+  contacts.push({ id: Date.now(), name, phone, type, primary: contacts.length === 0 });
+  document.getElementById('contact-name-input').value = '';
+  document.getElementById('contact-phone-input').value = '';
+  document.getElementById('contact-modal').classList.remove('show');
+  renderContacts();
+}
+
+function activateSOS() {
+  document.getElementById('sos-modal').classList.add('show');
+  let count = 5;
+  document.getElementById('sos-count').textContent = count;
+  sosTimer = setInterval(() => {
+    count--;
+    document.getElementById('sos-count').textContent = count;
+    if(count === 0) {
+      clearInterval(sosTimer);
+      document.getElementById('sos-modal').classList.remove('show');
+      speak('SOS activated! Alerting all emergency contacts. This is an emergency message from VaaniSetu.');
+    }
+  }, 1000);
+}
+
+function cancelSOS() {
+  clearInterval(sosTimer);
+  document.getElementById('sos-modal').classList.remove('show');
+  showToast('SOS cancelled');
+}
+</script>
+</body>
+</html>
