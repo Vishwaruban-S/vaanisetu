@@ -1,7 +1,7 @@
 # VaaniSetu – AI For All[cite: 1]
 
 ## About the Project
-VaaniSetu is an offline-first AI communication web application developed by the AesterAI Team[cite: 1]. It provides a zero-cost, privacy-first communication solution tailored specifically for the 2.7 crore Indians living with acquired speech disabilities[cite: 1]. 
+VaaniSetu is an offline-first AI communication web application. It provides a zero-cost, privacy-first communication solution tailored specifically for the 2.7 crore Indians living with acquired speech disabilities[cite: 1]. 
 
 ## Key Features
 * **Offline Functionality:** The application is 100% offline ready, ensuring continuous accessibility without internet dependence[cite: 1].
